@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:thrifstore/screens/authenticate/login.dart';
 //import 'package:thrifstore/screens/authenticate/login.dart';
@@ -17,10 +18,14 @@ class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
+  bool invisible = true;
 
   //textfieldstate
   String email = '';
   String pass = '';
+  String name = '';
+  String phone = '';
+  String adress = '';
   String error = '';
 
   @override
@@ -39,13 +44,12 @@ class _RegisterState extends State<Register> {
                           height: 40.0,
                         ),
                         Container(
-                          height: MediaQuery.of(context).size.height / 4,
+                          height: MediaQuery.of(context).size.height / 5,
                           decoration: const BoxDecoration(
                               image: DecorationImage(
                                   image: AssetImage('assets/alt_logo.png'))),
                         ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height / 6),
+                        const SizedBox(height: 20.0),
                         Column(
                           children: const [
                             Text(
@@ -66,11 +70,74 @@ class _RegisterState extends State<Register> {
                           ],
                         ),
                         TextFormField(
+                            keyboardType: TextInputType.name,
                             decoration: const InputDecoration(
-                              hintText: 'Email',
-                            ),
+                                labelText: 'Name',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                floatingLabelStyle:
+                                    TextStyle(fontWeight: FontWeight.bold)),
                             validator: (val) =>
-                                val!.isEmpty ? 'Enter an email' : null,
+                                val!.isEmpty ? 'Enter your name' : null,
+                            onChanged: (val) {
+                              setState(() {
+                                name = val;
+                              });
+                            }),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        TextFormField(
+                            keyboardType: TextInputType.phone,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'[0-9]')),
+                            ],
+                            decoration: const InputDecoration(
+                                labelText: 'Phone number',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                floatingLabelStyle:
+                                    TextStyle(fontWeight: FontWeight.bold)),
+                            validator: (val) => val!.length < 9
+                                ? 'Enter a valid phone number'
+                                : null,
+                            onChanged: (val) {
+                              setState(() {
+                                phone = val;
+                              });
+                            }),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        TextFormField(
+                            keyboardType: TextInputType.streetAddress,
+                            decoration: const InputDecoration(
+                                labelText: 'Adress',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                floatingLabelStyle:
+                                    TextStyle(fontWeight: FontWeight.bold)),
+                            validator: (val) =>
+                                val!.isEmpty ? 'Enter an adress' : null,
+                            onChanged: (val) {
+                              setState(() {
+                                adress = val;
+                              });
+                            }),
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: const InputDecoration(
+                                labelText: 'Email',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                floatingLabelStyle:
+                                    TextStyle(fontWeight: FontWeight.bold)),
+                            validator: (val) =>
+                                val!.isEmpty ? 'Enter an adress' : null,
                             onChanged: (val) {
                               setState(() {
                                 email = val;
@@ -80,13 +147,30 @@ class _RegisterState extends State<Register> {
                           height: 20.0,
                         ),
                         TextFormField(
-                            decoration: const InputDecoration(
-                              hintText: 'Password',
-                            ),
+                            decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      invisible
+                                          ? LineAwesomeIcons.eye
+                                          : LineAwesomeIcons.eye_slash,
+                                      color: Theme.of(context).primaryColorDark,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      setState(() {
+                                        invisible = !invisible;
+                                      });
+                                    }),
+                                labelText: 'Password',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                floatingLabelStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
                             validator: (val) => val!.length < 6
                                 ? 'Enter a password 6+ characters long'
                                 : null,
-                            obscureText: true,
+                            obscureText: invisible,
                             onChanged: (val) {
                               setState(() {
                                 pass = val;
@@ -95,21 +179,21 @@ class _RegisterState extends State<Register> {
                         const SizedBox(
                           height: 20.0,
                         ),
-                        ElevatedButton(
-                            child: const Text(
-                              'Sign up',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                                primary:
-                                    const Color.fromRGBO(133, 96, 185, 1.0)),
+                        Container(
+                          padding: const EdgeInsets.only(top: 3, left: 3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: MaterialButton(
+                            minWidth: double.infinity,
+                            height: 50,
                             onPressed: () async {
                               if (_formkey.currentState!.validate()) {
                                 setState(() {
                                   loading = true;
                                 });
-                                dynamic result =
-                                    await _auth.registerEmailPass(email, pass);
+                                dynamic result = await _auth.registerEmailPass(
+                                    email, pass, name, phone, adress);
 
                                 if (result == null) {
                                   showDialog(
@@ -123,7 +207,25 @@ class _RegisterState extends State<Register> {
                                   });
                                 }
                               }
-                            }),
+                            },
+                            color: Theme.of(context).primaryColor,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: Theme.of(context).primaryColorDark,
+                                ),
+                                borderRadius: BorderRadius.circular(40)),
+                            child: const Text(
+                              "Sign in",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: Color(0xFFF6E6FF)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:thrifstore/models/user.dart';
+import 'package:thrifstore/services/database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -38,11 +39,15 @@ class AuthService {
   }
 
   //register
-  Future registerEmailPass(String email, String pass) async {
+  Future registerEmailPass(String email, String pass, String name, String phone,
+      String adress) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: pass);
       User? user = result.user;
+
+      //Create a document for the user with uid
+      await DatabaseService(uid: user!.uid).updateUserData(name, phone, adress);
       return _userFromUser(user);
     } catch (e) {
       print(e.toString());

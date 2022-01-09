@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:thrifstore/screens/authenticate/register.dart';
 import 'package:thrifstore/services/auth.dart';
 import 'package:thrifstore/shared/loading.dart';
@@ -15,6 +16,7 @@ class _LoginState extends State<Login> {
   final AuthService _auth = AuthService();
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
+  bool invisible = true;
 
   //textfieldstate
   String email = '';
@@ -65,6 +67,13 @@ class _LoginState extends State<Login> {
                           ],
                         ),
                         TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            decoration: const InputDecoration(
+                                labelText: 'Email',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                floatingLabelStyle:
+                                    TextStyle(fontWeight: FontWeight.bold)),
                             validator: (val) =>
                                 val!.isEmpty ? 'Enter an email' : null,
                             onChanged: (val) {
@@ -76,7 +85,27 @@ class _LoginState extends State<Login> {
                           height: 20.0,
                         ),
                         TextFormField(
-                            obscureText: true,
+                            decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                    icon: Icon(
+                                      // Based on passwordVisible state choose the icon
+                                      invisible
+                                          ? LineAwesomeIcons.eye
+                                          : LineAwesomeIcons.eye_slash,
+                                      color: Theme.of(context).primaryColorDark,
+                                    ),
+                                    onPressed: () {
+                                      // Update the state i.e. toogle the state of passwordVisible variable
+                                      setState(() {
+                                        invisible = !invisible;
+                                      });
+                                    }),
+                                labelText: 'Password',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                floatingLabelStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            obscureText: invisible,
                             validator: (val) => val!.length < 6
                                 ? 'Enter a password 6+ characters long'
                                 : null,
@@ -88,14 +117,14 @@ class _LoginState extends State<Login> {
                         const SizedBox(
                           height: 20.0,
                         ),
-                        ElevatedButton(
-                            child: const Text(
-                              'Sign in',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                                primary:
-                                    const Color.fromRGBO(133, 96, 185, 1.0)),
+                        Container(
+                          padding: const EdgeInsets.only(top: 3, left: 3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(40),
+                          ),
+                          child: MaterialButton(
+                            minWidth: double.infinity,
+                            height: 50,
                             onPressed: () async {
                               if (_formkey.currentState!.validate()) {
                                 setState(() {
@@ -115,7 +144,25 @@ class _LoginState extends State<Login> {
                                   });
                                 }
                               }
-                            }),
+                            },
+                            color: Theme.of(context).primaryColor,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                  color: Theme.of(context).primaryColorDark,
+                                ),
+                                borderRadius: BorderRadius.circular(40)),
+                            child: const Text(
+                              "Login",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                  color: Color(0xFFF6E6FF)),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10.0,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
