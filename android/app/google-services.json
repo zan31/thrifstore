@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "506589722181",
+    "project_id": "thrifstore-843c3",
+    "storage_bucket": "thrifstore-843c3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506589722181:android:ab1c513c31b93fc30c952c",
+        "android_client_info": {
+          "package_name": "com.zanhrastnik.thrifstore"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506589722181-emlnv5r139liq16lg1b3pk8e0n8h58kj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAOzMboet3yApa3bb2YD2Fz3sXMnAiidw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "506589722181-emlnv5r139liq16lg1b3pk8e0n8h58kj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
