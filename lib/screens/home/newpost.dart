@@ -34,7 +34,6 @@ class _NewPostState extends State<NewPost> {
   double price = 0.0;
   String desc = '';
   bool loading = false;
-  final AuthService _auth = AuthService();
   String selectedValue = '';
   final List<String> categoryItems = [
     'Vehicles',
@@ -160,18 +159,6 @@ class _NewPostState extends State<NewPost> {
                 height: 40,
               ),
               centerTitle: true,
-              actions: [
-                IconButton(
-                  onPressed: () async {
-                    await _auth.logOut();
-                  },
-                  icon: const Icon(
-                    LineAwesomeIcons.alternate_sign_out,
-                    color: Color.fromRGBO(171, 255, 184, 1.0),
-                  ),
-                  tooltip: 'Logout',
-                ),
-              ],
             ),
             body: SingleChildScrollView(
               child: Center(

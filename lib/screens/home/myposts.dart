@@ -22,7 +22,7 @@ class MyPosts extends StatefulWidget {
 
 class _MyPostsState extends State<MyPosts> {
   late String userid;
-  final AuthService _auth = AuthService();
+
   late Stream<QuerySnapshot> _postsStream;
   @override
   void initState() {
@@ -148,18 +148,6 @@ class _MyPostsState extends State<MyPosts> {
               height: 40,
             ),
             centerTitle: true,
-            actions: [
-              IconButton(
-                onPressed: () async {
-                  await _auth.logOut();
-                },
-                icon: const Icon(
-                  LineAwesomeIcons.alternate_sign_out,
-                  color: Color.fromRGBO(171, 255, 184, 1.0),
-                ),
-                tooltip: 'Logout',
-              ),
-            ],
           ),
           body: ListView(
               children: snapshot.data!.docs.map((DocumentSnapshot document) {

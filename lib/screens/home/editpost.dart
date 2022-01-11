@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:thrifstore/screens/home/myposts.dart';
 import 'package:thrifstore/services/auth.dart';
 import 'package:thrifstore/services/database.dart';
 import 'package:thrifstore/services/storage.dart';
@@ -38,7 +39,6 @@ class _EditPostState extends State<EditPost> {
   late TextEditingController titlec;
   late TextEditingController pricec;
   late TextEditingController descc;
-  final AuthService _auth = AuthService();
   UploadTask? task;
   File? file;
   final _formkey = GlobalKey<FormState>();
@@ -179,18 +179,6 @@ class _EditPostState extends State<EditPost> {
                         height: 40,
                       ),
                       centerTitle: true,
-                      actions: [
-                        IconButton(
-                          onPressed: () async {
-                            await _auth.logOut();
-                          },
-                          icon: const Icon(
-                            LineAwesomeIcons.alternate_sign_out,
-                            color: Color.fromRGBO(171, 255, 184, 1.0),
-                          ),
-                          tooltip: 'Logout',
-                        ),
-                      ],
                     ),
                     body: SingleChildScrollView(
                       child: Center(
@@ -389,7 +377,13 @@ class _EditPostState extends State<EditPost> {
                                       onPressed: () {
                                         if (_formkey.currentState!.validate()) {
                                           uploadFile();
-                                          Navigator.of(context).pop();
+                                          Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => MyPosts(
+                                                  userid: userid,
+                                                ),
+                                              ));
                                         }
                                       },
                                       color: Theme.of(context).primaryColor,
@@ -401,7 +395,7 @@ class _EditPostState extends State<EditPost> {
                                           borderRadius:
                                               BorderRadius.circular(40)),
                                       child: const Text(
-                                        "Create",
+                                        "Update",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w600,
                                             fontSize: 16,
