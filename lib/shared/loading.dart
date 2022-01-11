@@ -9,7 +9,7 @@ class Loading extends StatelessWidget {
     return Container(
       color: const Color(0xFFF6E6FF),
       child: const Center(
-        child: SpinKitFadingCircle(
+        child: SpinKitDoubleBounce(
           color: Color.fromRGBO(133, 96, 185, 1.0),
           size: 50.0,
         ),

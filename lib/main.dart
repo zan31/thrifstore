@@ -9,7 +9,7 @@ import 'package:thrifstore/services/auth.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 MaterialColor createMaterialColor(Color color) {
@@ -46,9 +46,11 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Thrifstore',
         theme: ThemeData(
-            iconTheme: const IconThemeData(color: Color(0xFFFFFFFF)),
-            primaryIconTheme: const IconThemeData(color: Color(0xFFFFFFFF)),
-            canvasColor: const Color(0xFFFFFFFF),
+            iconTheme:
+                const IconThemeData(color: Color.fromRGBO(171, 255, 184, 1.0)),
+            primaryIconTheme:
+                const IconThemeData(color: Color.fromRGBO(171, 255, 184, 1.0)),
+            canvasColor: const Color(0xFFF6E6FF),
             primarySwatch:
                 createMaterialColor(const Color.fromRGBO(171, 255, 184, 1.0)),
             textTheme: GoogleFonts.montserratTextTheme(

@@ -1,14 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
+import 'package:thrifstore/screens/home/newpost.dart';
 import 'package:thrifstore/shared/loading.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:thrifstore/services/auth.dart';
 
 class DetailPost extends StatefulWidget {
-  DetailPost({Key? key, required this.postId, required this.userId})
+  DetailPost(
+      {Key? key,
+      required this.postId,
+      required this.userId,
+      required this.currid})
       : super(key: key);
   final String postId;
+  final String currid;
   final String userId;
 
   @override
@@ -18,6 +26,7 @@ class DetailPost extends StatefulWidget {
 class _DetailPostState extends State<DetailPost> {
   late String postId;
   late String userId;
+  late String currid;
   String name = '';
   String email = '';
   String phone = '';
@@ -48,6 +57,7 @@ class _DetailPostState extends State<DetailPost> {
 
   @override
   void initState() {
+    currid = widget.currid;
     postId = widget.postId;
     userId = widget.userId;
     getUser(userId);
@@ -63,7 +73,7 @@ class _DetailPostState extends State<DetailPost> {
             .snapshots(includeMetadataChanges: true),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return Loading();
+            return const Loading();
           }
           if (snapshot.hasData) {
             var doc = snapshot.data!.data();
@@ -96,7 +106,7 @@ class _DetailPostState extends State<DetailPost> {
                         image: DecorationImage(
                           fit: BoxFit.cover,
                           image: FirebaseImage(
-                            'gs://thrifstore-843c3.appspot.com/' +
+                            'gs://thrifstore-843c3.appspot.com/uploads/' +
                                 doc['imgurl'],
                           ),
                         ),
@@ -176,7 +186,7 @@ class _DetailPostState extends State<DetailPost> {
                 ),
                 Positioned(
                   left: 6.0,
-                  top: 65.0,
+                  top: 40.0,
                   child: InkWell(
                     onTap: () {
                       Navigator.pop(context);

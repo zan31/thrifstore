@@ -4,31 +4,33 @@ import 'package:firebase_image/firebase_image.dart';
 import 'package:flutter/material.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
 import 'package:thrifstore/screens/home/detail.dart';
-import 'package:thrifstore/screens/home/myposts.dart';
+import 'package:thrifstore/screens/home/home.dart';
+import 'package:thrifstore/screens/home/mydetail.dart';
 import 'package:thrifstore/screens/home/newpost.dart';
 import 'package:thrifstore/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'package:thrifstore/shared/loading.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-class Home extends StatefulWidget {
-  Home({Key? key, required this.userid}) : super(key: key);
+class MyPosts extends StatefulWidget {
+  MyPosts({Key? key, required this.userid}) : super(key: key);
   String userid;
 
   @override
-  _HomeState createState() => _HomeState();
+  _MyPostsState createState() => _MyPostsState();
 }
 
-class _HomeState extends State<Home> {
+class _MyPostsState extends State<MyPosts> {
   late String userid;
   final AuthService _auth = AuthService();
-  final Stream<QuerySnapshot> _postsStream = FirebaseFirestore.instance
-      .collection('posts')
-      .snapshots(includeMetadataChanges: true);
-
+  late Stream<QuerySnapshot> _postsStream;
   @override
   void initState() {
     userid = widget.userid;
+    _postsStream = FirebaseFirestore.instance
+        .collection('posts')
+        .where("user_id", isEqualTo: userid)
+        .snapshots();
     super.initState();
   }
 
@@ -65,17 +67,14 @@ class _HomeState extends State<Home> {
                       child: null,
                     ),
                     ListTile(
-                      tileColor: Color.fromRGBO(171, 255, 184, 1.0),
                       leading: const Icon(
                         LineAwesomeIcons.home,
-                        color: Color.fromRGBO(133, 96, 185, 1.0),
                         size: 35,
                       ),
                       title: const Text(
                         'Home',
                         style: TextStyle(
-                            color: Color.fromRGBO(133, 96, 185, 1.0),
-                            fontSize: 15),
+                            color: Color.fromRGBO(0, 0, 0, 0.65), fontSize: 15),
                       ),
                       onTap: () => {
                         Navigator.pushReplacement(
@@ -106,14 +105,17 @@ class _HomeState extends State<Home> {
                       },
                     ),
                     ListTile(
+                      tileColor: Color.fromRGBO(171, 255, 184, 1.0),
                       leading: const Icon(
                         LineAwesomeIcons.folder,
+                        color: Color.fromRGBO(133, 96, 185, 1.0),
                         size: 35,
                       ),
                       title: const Text(
                         'My posts',
                         style: TextStyle(
-                            color: Color.fromRGBO(0, 0, 0, 0.65), fontSize: 15),
+                            color: Color.fromRGBO(133, 96, 185, 1.0),
+                            fontSize: 15),
                       ),
                       onTap: () => {
                         Navigator.pushReplacement(
@@ -206,10 +208,11 @@ class _HomeState extends State<Home> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => DetailPost(
-                                      postId: data['docId'],
-                                      userId: data['user_id'],
-                                      currid: userid)));
+                                  builder: (context) => MyDetail(
+                                        postid: data['docId'],
+                                        categoryid: data['category_id'],
+                                        userid: userid,
+                                      )));
                         },
                       ),
                     ],

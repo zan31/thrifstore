@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:line_awesome_flutter/line_awesome_flutter.dart';
-import 'package:thrifstore/screens/authenticate/login.dart';
-//import 'package:thrifstore/screens/authenticate/login.dart';
 import 'package:thrifstore/services/auth.dart';
 import 'package:thrifstore/shared/loading.dart';
 
@@ -219,7 +217,7 @@ class _RegisterState extends State<Register> {
                               style: TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 16,
-                                  color: Color(0xFFF6E6FF)),
+                                  color: Colors.white),
                             ),
                           ),
                         ),

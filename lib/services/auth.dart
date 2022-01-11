@@ -39,15 +39,21 @@ class AuthService {
   }
 
   //register
-  Future registerEmailPass(String email, String pass, String name, String phone,
-      String adress) async {
+  Future registerEmailPass(
+    String email,
+    String pass,
+    String name,
+    String phone,
+    String adress,
+  ) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: pass);
       User? user = result.user;
 
       //Create a document for the user with uid
-      await DatabaseService(uid: user!.uid).updateUserData(name, phone, adress);
+      await DatabaseService(uid: user!.uid)
+          .updateUserData(name, phone, adress, email);
       return _userFromUser(user);
     } catch (e) {
       print(e.toString());
